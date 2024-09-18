@@ -1,12 +1,9 @@
 /* eslint-disable no-unused-vars */
 import React from 'react'
 import { useState } from 'react'
-import ButtonDelete from './components/ButtonDelete';
-import ButtonMoveUp from './components/ButtonMoveUp';
-import ButtonMoveDown from './components/ButtonMoveDown';
 
 function ToDoList() {
-    const [tasks, setTasks] = useState(["Correr 2KM", "Ir a Academia", "Estudar 20min"])
+    const [tasks, setTasks] = useState([])
     const [newTask, setNewTask] = useState("")
 
     function handleInputChange(event){
@@ -14,19 +11,33 @@ function ToDoList() {
     }
 
     function addTask(){
-
+        if(newTask.trim() !== "") {
+            setTasks(t => [...tasks, newTask])
+            setNewTask("")
+        }
     }
 
-    function removeTask(){
-
+    function removeTask(index){
+        const updateTasks = tasks.filter((_, i) => i !== index)
+        setTasks(updateTasks)
     }
 
-    function moveTaskUp(){
-
+    function moveTaskUp(index){
+        if (index > 0){
+            const updatedTasks = [...tasks];
+            [updatedTasks[index], updatedTasks[index - 1]] = 
+            [updatedTasks[index - 1], updatedTasks[index]];
+            setTasks(updatedTasks)
+        }
     }
 
-    function moveTaskDown(){
-
+    function moveTaskDown(index){
+        if (index < tasks.length - 1){
+            const updatedTasks = [...tasks];
+            [updatedTasks[index], updatedTasks[index + 1]] = 
+            [updatedTasks[index + 1], updatedTasks[index]];
+            setTasks(updatedTasks)
+        }
     }
     
   return (
@@ -34,7 +45,7 @@ function ToDoList() {
     w-full h-screen flex justify-center items-center
     ">
         <div className='to-do-list bg-slate-100
-        w-[500px] h-[700px] rounded-md p-5 flex flex-col gap-4
+        w-[500px] min-h-[500px] rounded-md p-5 flex flex-col gap-4
         '>
             <h1 className='font-extrabold text-center text-3xl text-slate-600'>TO-DO-LIST</h1>
 
@@ -62,21 +73,27 @@ function ToDoList() {
             <div className="tasks-content
             flex justify-center
             ">
-                <ol className='flex flex-col gap-2 w-full'>
+                <ol className='flex flex-col gap-2 w-full font-bold'>
                     {tasks.map((task, index) => 
                         <li key={index} className='flex items-center gap-4 border-2 p-[15px_10px] rounded-md'>
                             <span className='text w-1/2'>{task}</span>
-                            <ButtonDelete
-                            onClick={() => removeTask(index)}
-                            className='delete-button'/>
+                            <button onClick={() => removeTask(index)} className="bg-red-400 p-2 rounded-sm hover:bg-red-300 transition-colors font-bold text-white">
+                                 APAGAR 
+                            </button>
 
-                            <ButtonMoveUp
+                            <button 
                             onClick={() => moveTaskUp(index)}
-                            className='move-button'/>
-
-                            <ButtonMoveDown
+                            className="
+                            py-2 px-3 bg-orange-300 rounded-sm hover:bg-orange-200 transition-colors">
+                                👆
+                            </button>
+                            
+                            <button 
                             onClick={() => moveTaskDown(index)}
-                            className='move-button'/>
+                            className="
+                            py-2 px-3 bg-orange-300 rounded-sm hover:bg-orange-200 transition-colors">
+                                👇
+                            </button>
                         </li>
                     )}
                 </ol>
